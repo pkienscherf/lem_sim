@@ -6,15 +6,13 @@ The generation from distributed renewable energy sources (RES) is constantly inc
 LEM, also called microgrid energy markets, consist of small scale prosumers, consumers and a market platform which enables the trading of locally generated energy between the parties of a community.
 
 ## Requirements
-* Python 3.6
-* Truffle v5.0
-* Docker v18.0
+* Python 3.9
+* Truffle v5.11.5 
 * GNU Make
+* Ganache Desktop 2.7.1 
 
 ## Installation
-1. First of all, we have to start the local blockchain. For this type in:
-
-```docker-compose up ganache```
+1. First of all, we have to start the local blockchain. For this, start the Ganache Desktop application and create a workspace with the appropriate number of agents (dealer + agents, i.e., 3 addresses for a BTM with two agents)
 
 2. After that, we need to deploy the smart contract into the running local blockchain. Therefore, we open another terminal window and change the directory to:
 

@@ -6,10 +6,10 @@ from web3 import Web3, HTTPProvider
 def get_network_connection(connection='ip'):
 
     if(connection == 'docker'):
-        network_address = 'HTTP://ganache:8545'
+        network_address = 'HTTP://ganache:7545'
         time.sleep(10)
     elif(connection == 'ip'):
-        network_address = 'HTTP://0.0.0.0:8545'
+        network_address = 'HTTP://0.0.0.0:7545'
     else:
         click.secho('No connection address specified!', fg='red')
         quit()

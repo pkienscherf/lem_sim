@@ -49,7 +49,7 @@ class Agent(object):
 
     @property
     def balance(self):
-        balance = self._web3.eth.getBalance(self._account_address)
+        balance = self._web3.eth.get_balance(self._account_address)
         return float(utils.from_wei_to_ether(balance))
 
     @property

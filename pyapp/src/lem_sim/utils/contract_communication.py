@@ -6,11 +6,11 @@ MULTIPLIER = 10**DECIMAL_PLACES
 
 
 def from_ether_to_wei(value):
-    return Web3.toWei(value, 'ether')
+    return Web3.to_wei(value, 'ether')
 
 
 def from_wei_to_ether(value):
-    return Web3.fromWei(value, 'ether')
+    return Web3.from_wei(value, 'ether')
 
 
 def prepare_for_sending(value):

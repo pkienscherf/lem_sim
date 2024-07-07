@@ -52,7 +52,7 @@ def main():
 
         utils.wait_for_new_block(var)
     
-        var.latest_block = var.web3.eth.getBlock('latest')['number']
+        var.latest_block = var.web3.eth.get_block('latest')['number']
 
         var.dealer.recalculate_resource_inventory() # transact
 

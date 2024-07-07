@@ -23,7 +23,7 @@ class Variables(object):
         self._dealer = client.Dealer(self._accounts.pop(0), self._web3, self._dealer_contract, self._central_problem.shared_resources.size)
         self._agent_pool = [client.Agent(number, account, self._web3, self._dealer_contract) for number, account in enumerate(self._accounts, 1)]
         self._amount_agents = len(self._agent_pool)
-        self._latest_block = self._web3.eth.getBlock('latest')['number']
+        self._latest_block = self._web3.eth.get_block('latest')['number']
 
     @property
     def web3(self):
