@@ -1,17 +1,34 @@
 import numpy as np
+import pandas as pd
+import os
 
 from lem_sim import communication
 from lem_sim import client
 from lem_sim import contract
 from lem_sim import linearoptimization as lp
 
-''' Definition of the Central Optimization Problem '''
-TARGET_COEFS = np.array([-1, -2, -1, -3])  # cost vectors (d)
-INDIVIDUAL_RESOURCES = np.array([4, 9])  # individual resources (n)
-INDIVIDUAL_COEFS = np.array([[2, 1, 0, 0], [0, 0, 2, 3]])  # individual coefficients(N)
-SHARED_RESOURCES = np.array([8, 5])  # shared resources (c)
-SHARED_COEFS = np.array([[1, 3, 2, 1], [1, 1, 1, 1]])  # shared coefficients (C)
+data_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "..", "..", "..", "data")
 
+''' Read in and process problem data '''
+D_df = pd.read_csv(os.path.join(data_dir, "D.csv")) # valuation data (d)
+PTDF_df = pd.read_csv(os.path.join(data_dir, "PTDF.csv")) # PTDF matrix (here 109 x 55, later transposed)
+Limits_df = pd.read_csv(os.path.join(data_dir, "Limits.csv")) # Line limits (109 x 1)
+Loads_df = pd.read_csv(os.path.join(data_dir, "Loads_h.csv")).iloc[17:17+4] # non-EV loads, hours 17h to 21h - 4 time steps
+
+T, N = Loads_df.shape
+L = PTDF_df.shape[0]
+Delta = 50. # energy needed.
+Pmax = 11.
+
+''' Definition of the Central Optimization Problem '''
+TARGET_COEFS = -np.concatenate(np.array(D_df).transpose())  # cost vectors (d)
+INDIVIDUAL_RESOURCES = np.tile(np.append(Delta, Pmax*np.ones(T)), N)  # individual resources (n)
+INDIVIDUAL_COEFS = np.kron(np.eye(N), np.concatenate((np.ones(T).reshape(1,T), np.eye(T)), axis=0))  # individual coefficients(N)
+SHARED_RESOURCES = (np.array(Limits_df) - np.matmul(np.array(PTDF_df), np.array(Loads_df).transpose())).flatten()  # shared resources (c)
+
+SHARED_COEFS = np.zeros((T*L, T*N))
+for t in range(T):
+    SHARED_COEFS[t:(T*L):T, t:(T*N):T] = np.array(PTDF_df)
 
 class Variables(object):
 

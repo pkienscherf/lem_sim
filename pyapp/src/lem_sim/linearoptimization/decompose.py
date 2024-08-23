@@ -26,7 +26,7 @@ def split_central_problem(var):
         d = np.split(central_problem.target_coefs, amount_agents, axis=0)
         n = np.split(central_problem.individual_resources, amount_agents, axis=0)
         N = np.split(central_problem.individual_coefs, amount_agents, axis=1)
-        c = distribute_shared_resources(central_problem.shared_resources, amount_agents, var.dealer)
+        c = distribute_shared_resources(central_problem.shared_resources, central_problem.shared_coefs, amount_agents, var.dealer)
         C = np.split(central_problem.shared_coefs, amount_agents, axis=1)
 
         return d, n, N, c, C
@@ -36,10 +36,12 @@ def remove_zero_rows_of_individual_coefs(N):
         return [N_j[~np.all(N_j == 0, axis=1)] for N_j in N]
 
 
-def distribute_shared_resources(c, amount_agents, dealer):
+def distribute_shared_resources(shared_resources, shared_coefs, amount_agents, dealer):
         ''' distribute the shared resources into equally sized parts '''
-        distributed_resources = [np.divide(c, amount_agents + 1) for i in range(amount_agents + 1)]
-        distributed_resources = [np.around(array, decimals=2) for array in distributed_resources]
+        equal_shares = shared_resources / shared_coefs.sum(axis=1)
+        T = shared_coefs.shape[1] // amount_agents
+        distributed_resources = [equal_shares * shared_coefs[:, i*T:(i+1)*T].sum(axis=1) for i in range(amount_agents)]
+        distributed_resources = [np.around(array, decimals=3) for array in distributed_resources]
 
         # allocation of research paper
         # distributed_resources = []
@@ -47,5 +49,5 @@ def distribute_shared_resources(c, amount_agents, dealer):
         # distributed_resources.append(np.array([4, 1]))
         # distributed_resources.append(np.array([1, 0]))
 
-        dealer.resource_inventory = distributed_resources.pop(0)
+        dealer.resource_inventory = np.zeros(shared_coefs.shape[0])
         return distributed_resources

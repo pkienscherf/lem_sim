@@ -10,3 +10,4 @@ flake8
 web3
 numpy
 cvxopt
+pandas

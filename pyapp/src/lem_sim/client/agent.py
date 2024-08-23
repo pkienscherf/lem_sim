@@ -158,7 +158,7 @@ class Agent(object):
 def solve_bundle_determination(optimization_problem, mkt_prices):
         bundle_target_coefs = np.concatenate((optimization_problem.target_coefs, mkt_prices))
 
-        bundle_individual_coefs = np.concatenate((optimization_problem.individual_coefs, np.zeros(optimization_problem.individual_coefs.shape)), axis=1)
+        bundle_individual_coefs = np.concatenate((optimization_problem.individual_coefs, np.zeros((optimization_problem.individual_coefs.shape[0], len(mkt_prices)))), axis=1)
         bundle_shared_coefs = np.concatenate((optimization_problem.shared_coefs, np.identity(mkt_prices.size, dtype=float) * (-1)), axis=1)
 
         bundle_var_geq_zero_constraint = np.concatenate((np.identity(mkt_prices.size) * (-1), np.zeros(optimization_problem.shared_coefs.shape)), axis=1)
